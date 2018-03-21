@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-<div id="warbler-hero" class="full-width"></div>
+{% if user.header_image_url != None %}
+    <div id="warbler-hero" style="background-image:url('{{ user.header_image_url }}')" class="full-width"></div>
+{% else %}
+    <div id="warbler-hero" class="full-width"></div>
+{% endif %}
 <img src="{{ user.image_url }}" alt="Image for {{ user.username }}" id="profile-avatar">
 <div class="row full-width">
   <div class="container">
@@ -53,6 +57,18 @@
 <div class="row">
   <div class="col-sm-3">
     <h4 id="sidebar-username">@{{ user.username }}</h4>
+    {% if user.full_name %}
+      <h6 class="mt-3 mb-1">Name:</h6>
+      <h5 class="mt-1" id="sidebar-full_name">{{ user.full_name }}</h5>
+    {% endif %}
+    {% if user.location %}
+      <h6 class="mt-3 mb-1">Location:</h6>
+      <h5 class="mt-1" id="sidebar-location">{{ user.location }}</h5>
+    {% endif %}
+    {% if user.bio %}
+      <h6 class="mt-3 mb-1">Bio:</h6>
+      <p class="mt-1" id="sidebar-bio">{{ user.bio }}</p>
+    {% endif %}
   </div>
   {% block user_details %}
   {% endblock %}

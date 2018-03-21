@@ -32,7 +32,7 @@
           </span>
         {% endfor %}
       {% endif %}
-      {% if form.full_name != None %}
+      {% if user.full_name != None %}
         {{ form.full_name(placeholder="Optional: What is your name?", value=user.full_name, class="form-control") }}
       {% else %}
         {{ form.full_name(placeholder="Optional: What is your name?", class="form-control") }}
@@ -46,7 +46,7 @@
           </span>
         {% endfor %}
       {% endif %}
-      {% if form.location != None %}
+      {% if user.location != None %}
         {{ form.location(placeholder="Optional: What is your location?", value=user.location, class="form-control") }}
       {% else %}
         {{ form.location(placeholder="Optional: What is your location?", class="form-control") }}
@@ -60,7 +60,11 @@
           </span>
         {% endfor %}
       {% endif %}
-      <textarea name="bio" id="bio" rows="3" class="form-control" placeholder="Optional: What is your life story?">{{user.bio}}</textarea>
+      {% if user.bio != None %}
+          <textarea name="bio" id="bio" rows="3" class="form-control" placeholder="Optional: What is your life story?">{{user.bio}}</textarea>
+      {% else %}
+          <textarea name="bio" id="bio" rows="3" class="form-control" placeholder="Optional: What is your life story?"></textarea>
+      {% endif %}
       
       <!-- image_url -->
       {% if form.image_url.errors %}
@@ -81,7 +85,7 @@
           </span>
         {% endfor %}
       {% endif %}
-      {% if form.header_image_url != None %}
+      {% if user.header_image_url != None %}
         {{ form.header_image_url(placeholder="Optional: What image do you want to add to your header?", value=user.header_image_url, class="form-control") }}
       {% else %}
         {{ form.header_image_url(placeholder="Optional: What image do you want to add to your header?", class="form-control") }}
