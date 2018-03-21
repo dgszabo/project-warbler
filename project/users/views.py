@@ -92,7 +92,7 @@ def edit(id):
     '/<int:follower_id>/follower', methods=['POST', 'DELETE'])
 @login_required
 def follower(follower_id):
-    followed = User.query.get(follower_id)
+    followed = User.query.get_or_404(follower_id)
     if request.method == 'POST':
         current_user.following.append(followed)
     else:
@@ -111,12 +111,12 @@ def following(id):
 @users_blueprint.route('/<int:id>/followers', methods=['GET'])
 @login_required
 def followers(id):
-    return render_template('users/followers.html', user=User.query.get(id))
+    return render_template('users/followers.html', user=User.query.get_or_404(id))
 
 
 @users_blueprint.route('/<int:id>', methods=["GET", "PATCH", "DELETE"])
 def show(id):
-    found_user = User.query.get(id)
+    found_user = User.query.get_or_404(id)
     if (request.method == 'GET' or current_user.is_anonymous
             or current_user.get_id() != str(id)):
         return render_template('users/show.html', user=found_user)

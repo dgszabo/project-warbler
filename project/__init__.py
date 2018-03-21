@@ -4,6 +4,7 @@ from flask_modus import Modus
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_migrate import Migrate
 import os
 
 app = Flask(__name__)
@@ -13,7 +14,7 @@ if os.environ.get('ENV') == 'production':
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 else:
     app.config['DEBUG'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://localhost/warbler-db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://localhost/warbler'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
@@ -25,6 +26,7 @@ modus = Modus(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 from project.users.views import users_blueprint
 from project.messages.views import messages_blueprint
@@ -38,7 +40,7 @@ app.register_blueprint(
 
 @login_manager.user_loader
 def load_user(id):
-    return User.query.get(int(id))
+    return User.query.get_or_404(int(id))
 
 
 @app.route('/')
@@ -46,6 +48,9 @@ def root():
     messages = Message.query.order_by("timestamp asc").limit(100).all()
     return render_template('home.html', messages=messages)
 
+@app.errorhandler(404)
+def error(e):
+    return render_template('404.html'), 404
 
 @app.after_request
 def add_header(r):

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container text-center">
+    <h2 class="m-5">Something went wrong!</h2>
+    <img class="rounded" src="https://media3.giphy.com/media/M7Txf8Imy1pGo/giphy.gif" alt="warbler flapping">
+    <h4 class="m-4">
+        Go back to the
+        <a href="{{url_for('users.signup')}}">sign-up page</a>
+        or to
+        <a href="{{url_for('root')}}">your homepage</a>
+    </h4>
+</div>
+
+{% endblock %}
