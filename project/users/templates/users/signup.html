@@ -8,22 +8,28 @@
       <span class="text-danger">
         {{ error }}
       </span>
-      {% endfor %} {% endif %} {{ form.email(placeholder="E-mail", class="form-control") }} {% if form.username.errors %} {% for
+      {% endfor %} {% endif %}
+      
+      {{ form.email(placeholder="E-mail", class="form-control") }}
+      
+      {% if form.username.errors %} {% for
       error in form.username.errors %}
       <span class="text-danger">
         {{ error }}
       </span>
-      {% endfor %} {% endif %} {{ form.username(placeholder="Username", class="form-control") }} {% if form.password.errors %}
+      {% endfor %} {% endif %}
+      
+      {{ form.username(placeholder="Username", class="form-control") }}
+      
+      {% if form.password.errors %}
       {% for error in form.password.errors %}
       <span class="text-danger">
         {{ error }}
       </span>
-      {% endfor %} {% endif %} {{ form.password(placeholder="Password", class="form-control") }} {% if form.image_url.errors %}
-      {% for error in form.image_url.errors %}
-      <span class="text-danger">
-        {{ error }}
-      </span>
-      {% endfor %} {% endif %} {{ form.image_url(placeholder="Image URL", class="form-control") }}
+      {% endfor %} {% endif %}
+      
+      {{ form.password(placeholder="Password", class="form-control") }}
+      
       <button type="submit" class="btn btn-primary btn-lg btn-block">Sign me up!</button>
     </form>
 

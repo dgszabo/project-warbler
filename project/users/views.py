@@ -1,6 +1,6 @@
 from flask import redirect, render_template, request, url_for, Blueprint, flash
 from project.users.models import User
-from project.users.forms import UserForm, LoginForm
+from project.users.forms import UserForm, UserEditForm, LoginForm
 from project import db
 from sqlalchemy.exc import IntegrityError
 from flask_login import login_user, logout_user, current_user, login_required
@@ -41,8 +41,6 @@ def signup():
                     username=form.username.data,
                     email=form.email.data,
                     password=form.password.data)
-                if form.image_url.data:
-                    new_user.image_url = form.image_url.data
                 db.session.add(new_user)
                 db.session.commit()
                 login_user(new_user)
@@ -85,7 +83,7 @@ def logout():
 @ensure_correct_user
 def edit(id):
     return render_template(
-        'users/edit.html', form=UserForm(), user=User.query.get(id))
+        'users/edit.html', form=UserEditForm(), user=User.query.get_or_404(id))
 
 
 @users_blueprint.route(
@@ -121,12 +119,16 @@ def show(id):
             or current_user.get_id() != str(id)):
         return render_template('users/show.html', user=found_user)
     if request.method == b"PATCH":
-        form = UserForm(request.form)
+        form = UserEditForm(request.form)
         if form.validate():
             if User.authenticate(found_user.username, form.password.data):
                 found_user.username = form.username.data
                 found_user.email = form.email.data
-                found_user.image_url = form.image_url.data or None
+                found_user.image_url = form.image_url.data
+                found_user.header_image_url = form.header_image_url.data
+                found_user.bio = form.bio.data
+                found_user.full_name = form.full_name.data
+                found_user.location = form.location.data
                 db.session.add(found_user)
                 db.session.commit()
                 return redirect(url_for('users.show', id=id))

@@ -1,5 +1,6 @@
 from project import db, bcrypt
 from flask_login import UserMixin
+from project.messages.models import Message
 
 FollowersFollowee = db.Table(
     'follows', db.Column('id', db.Integer, primary_key=True),
