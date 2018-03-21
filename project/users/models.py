@@ -22,6 +22,7 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text)
     location = db.Column(db.Text)
     password = db.Column(db.Text)
+    full_name = db.Column(db.Text)
     messages = db.relationship('Message', backref='user', lazy='dynamic')
     followers = db.relationship(
         "User",
@@ -35,11 +36,20 @@ class User(db.Model, UserMixin):
                  email,
                  username,
                  password,
-                 image_url='/static/images/default-pic.png'):
+                 image_url = '/static/images/default-pic.png',
+                 header_image_url = '/static/images/warbler-hero.jpg',
+                 full_name = None,
+                 bio = None,
+                 location = None
+                 ):
         self.email = email
         self.username = username
         self.image_url = image_url
         self.password = bcrypt.generate_password_hash(password).decode('UTF-8')
+        self.header_image_url = header_image_url
+        self.full_name = full_name
+        self.bio = bio
+        self.location = location
 
     def __repr__(self):
         return f"#{self.id}: email: {self.email} - username: {self.username}"
