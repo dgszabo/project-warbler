@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, url_for, Blueprint, flash
+from flask import redirect, render_template, request, url_for, Blueprint, flash, session
 from project.users.models import User
 from project.users.forms import UserForm, UserEditForm, LoginForm
 from project import db
@@ -61,6 +61,7 @@ def login():
                                            form.password.data)
             if found_user:
                 login_user(found_user)
+                session['user_id'] = found_user.id
                 flash({
                     'text': f"Hello, {found_user.username}!",
                     'status': 'success'
@@ -75,6 +76,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    session.pop('user_id', None)
     flash({'text': "You have successfully logged out.", 'status': 'success'})
     return redirect(url_for('users.login'))
 
@@ -124,9 +126,7 @@ def likes(id):
 def show(id):
     found_user = User.query.get_or_404(id)
     if (request.method == 'GET' or current_user.is_anonymous or current_user.get_id() != str(id)):
-        ids = [found_user.id] + [user.id for user in found_user.following]
-        messages = Message.query.filter(Message.user_id.in_(ids)).order_by('timestamp desc').limit(100)
-        return render_template('users/show.html', user=found_user, messages = messages)
+        return render_template('users/show.html', user=found_user)
     if request.method == b"PATCH":
         form = UserEditForm(request.form)
         if form.validate():

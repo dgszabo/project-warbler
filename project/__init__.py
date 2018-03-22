@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_modus import Modus
 from flask_bcrypt import Bcrypt
@@ -40,12 +40,14 @@ app.register_blueprint(
 
 @login_manager.user_loader
 def load_user(id):
-    return User.query.get_or_404(int(id))
+    return User.query.get(int(id))
 
 
 @app.route('/')
 def root():
-    messages = Message.query.order_by("timestamp asc").limit(100).all()
+    found_user = User.query.get(session['user_id'])
+    ids = [found_user.id] + [user.id for user in found_user.following]
+    messages = Message.query.filter(Message.user_id.in_(ids)).order_by('timestamp desc').limit(100)
     return render_template('home.html', messages=messages)
 
 @app.errorhandler(404)

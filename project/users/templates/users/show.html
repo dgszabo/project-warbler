@@ -2,7 +2,7 @@
 {% block user_details %}
 <div class="col-sm-6">
   <ul class="list-group" id="messages">
-      {% for message in messages %}
+      {% for message in user.messages.order_by('timestamp desc') %}
       <li class="list-group-item">
         <a href="{{ url_for('messages.show', id=message.user.id, message_id=message.id ) }}" class="message-link"/>
         <a href="{{ url_for('users.show', id=message.user.id) }}">
