@@ -36,7 +36,6 @@ def like_add_del(id, message_id):
             return redirect(url_for('users.likes', id = id))
         return redirect(url_for('users.index'))
     if request.method == b'DELETE':
-        from IPython import embed; embed()
         if form.validate():
             user.message_likes.remove(Message.query.get_or_404(message_id))
             db.session.commit()

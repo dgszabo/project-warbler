@@ -11,7 +11,9 @@ Likes = db.Table('likes',
                 db.ForeignKey('users.id', ondelete="cascade")),
         db.Column('message_id',
                 db.Integer,
-                db.ForeignKey('messages.id', ondelete="cascade")))
+                db.ForeignKey('messages.id', ondelete="cascade")),
+        db.UniqueConstraint('user_id', 'message_id', name="one_time_like")
+        )
 
 class Message(db.Model):
 
