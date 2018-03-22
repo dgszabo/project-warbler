@@ -10,7 +10,11 @@
         <div class="col-lg-4 col-md-6 col-12">
           <div class="card user-card">
             <div class="card-inner">
-              <img src="{{ url_for('static', filename='images/warbler-hero.jpg') }}" alt="" class="card-hero">
+              {% if user.header_image_url != None %}
+                  <img src="{{ user.header_image_url }}" alt="heading image" class="card-hero">
+              {% else %}
+                  <img src="{{ url_for('static', filename='images/warbler-hero.jpg') }}" alt="" class="card-hero">
+              {% endif %}
               <div class="card-contents">
                 <a href="{{ url_for('users.show', id=user.id) }}" class="card-link">
                   <img src="{{ user.image_url }}" alt="Image for {{ user.username }}" class="card-image">
