@@ -134,7 +134,7 @@ def show(id):
                 found_user.username = form.username.data
                 found_user.email = form.email.data
                 found_user.image_url = form.image_url.data
-                found_user.header_image_url = form.header_image_url.data
+                found_user.header_image_url = form.header_image_url.data or None
                 found_user.bio = form.bio.data
                 found_user.full_name = form.full_name.data
                 found_user.location = form.location.data

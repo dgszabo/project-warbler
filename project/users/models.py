@@ -38,7 +38,7 @@ class User(db.Model, UserMixin):
                  username,
                  password,
                  image_url = '/static/images/default-pic.png',
-                 header_image_url = '/static/images/warbler-hero.jpg',
+                 header_image_url = None,
                  full_name = None,
                  bio = None,
                  location = None
