@@ -5,6 +5,7 @@ from project import db
 from sqlalchemy.exc import IntegrityError
 from flask_login import login_user, logout_user, current_user, login_required
 from functools import wraps
+from project.messages.models import Message
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
 
@@ -115,9 +116,10 @@ def followers(id):
 @users_blueprint.route('/<int:id>', methods=["GET", "PATCH", "DELETE"])
 def show(id):
     found_user = User.query.get_or_404(id)
-    if (request.method == 'GET' or current_user.is_anonymous
-            or current_user.get_id() != str(id)):
-        return render_template('users/show.html', user=found_user)
+    if (request.method == 'GET' or current_user.is_anonymous or current_user.get_id() != str(id)):
+        ids = [found_user.id] + [user.id for user in found_user.following]
+        messages = Message.query.filter(Message.user_id.in_(ids)).order_by('timestamp desc').limit(100)
+        return render_template('users/show.html', user=found_user, messages = messages)
     if request.method == b"PATCH":
         form = UserEditForm(request.form)
         if form.validate():
