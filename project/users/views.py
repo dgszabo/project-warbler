@@ -112,6 +112,12 @@ def following(id):
 def followers(id):
     return render_template('users/followers.html', user=User.query.get_or_404(id))
 
+@users_blueprint.route('/<int:id>/likes', methods=['GET'])
+@login_required
+def likes(id):
+    ids = [msg.id for msg in User.query.get_or_404(id).message_likes]
+    messages = Message.query.filter(Message.id.in_(ids)).order_by('timestamp desc').limit(100)
+    return render_template('users/likes.html', user=User.query.get_or_404(id), messages = messages)
 
 @users_blueprint.route('/<int:id>', methods=["GET", "PATCH", "DELETE"])
 def show(id):
