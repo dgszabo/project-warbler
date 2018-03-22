@@ -6,3 +6,6 @@ from wtforms.validators import DataRequired
 
 class MessageForm(FlaskForm):
     text = StringField('text', validators=[DataRequired()], widget=TextArea())
+
+class LikeForm(FlaskForm):
+    pass

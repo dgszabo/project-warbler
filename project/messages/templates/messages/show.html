@@ -11,20 +11,38 @@
         <div class="message-area">
           <div class="message-heading">
             <a href="{{ url_for('users.show', id=message.user.id) }}">@{{ message.user.username }}</a>
+            
             {% if current_user.is_authenticated %}
+              <div class="row ml-auto mr-1">
+              
+                {% if current_user.id != message.user_id %}
+                  {% if current_user.is_liking(message) %}
+                    <form class="form-inline mx-1" method="POST" action="{{url_for('messages.like_add_del', id=current_user.id, message_id = message.id)}}?_method=DELETE">
+                      {{ form.csrf_token }}
+                      <input type="submit" value="Unlike" class="btn btn-success btn-sm">
+                    </form>
+                  {% else %}
+                    <form class="form-inline mx-1" method="POST" action="{{url_for('messages.like_add_del',id=current_user.id,message_id = message.id)}}">
+                      {{ form.csrf_token }}
+                      <input type="submit" value="Like" class="btn btn-outline-success btn-sm">
+                    </form>
+                  {% endif %}
+              {% endif %}
+
               {% if current_user.id == message.user.id %}
-                <form method="POST" action="{{url_for('messages.show', message_id=message.id, id=message.user.id)}}?_method=DELETE">
-                  <input type="submit" value="Delete" class="btn btn-outline-danger">
+                <form class="form-inline mx-1" method="POST" action="{{url_for('messages.show', message_id=message.id, id=message.user.id)}}?_method=DELETE">
+                  <input type="submit" value="Delete" class="btn btn-outline-danger btn-sm">
                 </form>
               {% elif current_user.is_following(message.user) %}
-                <form method="POST" action="{{url_for('users.follower', follower_id=message.user.id)}}?_method=DELETE">
-                  <input type="submit" value="Unfollow" class="btn btn-primary">
+                <form class="form-inline mx-1" method="POST" action="{{url_for('users.follower', follower_id=message.user.id)}}?_method=DELETE">
+                  <input type="submit" value="Unfollow" class="btn btn-primary btn-sm">
                 </form>
               {% else %}
-                <form method="POST" action="{{url_for('users.follower', follower_id=message.user.id)}}">
+                <form class="form-inline mx-1" method="POST" action="{{url_for('users.follower', follower_id=message.user.id)}}">
                   <input type="submit" value="Follow" class="btn btn-outline-primary btn-sm">
                 </form>
               {% endif %}
+              </div>
             {% endif %}
           </div>
           <p class="single-message">{{ message.text }}</p>

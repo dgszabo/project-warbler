@@ -61,6 +61,10 @@ class User(db.Model, UserMixin):
     def is_following(self, user):
         return bool(self.following.filter_by(id=user.id).first())
 
+    def is_liking(self, message):
+        
+        return bool(len([ msg for msg in self.message_likes if msg.id == message.id]) == 1)
+
     @classmethod
     def authenticate(cls, username, password):
         found_user = cls.query.filter_by(username=username).first()
