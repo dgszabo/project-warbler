@@ -480,3 +480,7 @@ nav + .container {
   letter-spacing: .01em;
   margin-bottom: 10px;
 }
+
+.like-area {
+  z-index: 10;
+}

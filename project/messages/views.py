@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, url_for, Blueprint
+from flask import redirect, render_template, request, url_for, Blueprint, jsonify
 from project.messages.models import Message
 from project.users.models import User
 from project.users.views import ensure_correct_user
@@ -41,6 +41,24 @@ def like_add_del(id, message_id):
             db.session.commit()
             return redirect(url_for('users.likes', id = id))
         return redirect(url_for('users.index'))
+
+@messages_blueprint.route('/ajax/<int:message_id>/likes', methods=['POST', 'DELETE'])
+@login_required
+@ensure_correct_user
+def ajax_like_add_del(id, message_id):
+    user=User.query.get_or_404(id)
+    if request.method == 'POST':
+        if id == user.id:
+            user.message_likes.append(Message.query.get_or_404(message_id))
+            db.session.commit()
+            return jsonify('you managed to like something')
+        return jsonify('like was not registered')
+    if request.method == 'DELETE':
+        if id == user.id:
+            user.message_likes.remove(Message.query.get_or_404(message_id))
+            db.session.commit()
+            return jsonify('you managed to un-like something')
+        return jsonify('unlike was not registered')
 
 @messages_blueprint.route('/new')
 @login_required
