@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_modus import Modus
 from flask_bcrypt import Bcrypt
@@ -45,10 +45,12 @@ def load_user(id):
 
 @app.route('/')
 def root():
-    found_user = User.query.get(session['user_id'])
-    ids = [found_user.id] + [user.id for user in found_user.following]
-    messages = Message.query.filter(Message.user_id.in_(ids)).order_by('timestamp desc').limit(100)
-    return render_template('home.html', messages=messages)
+    if session.get('user_id'):
+        found_user = User.query.get(session['user_id'])
+        ids = [found_user.id] + [user.id for user in found_user.following]
+        messages = Message.query.filter(Message.user_id.in_(ids)).order_by('timestamp desc').limit(100)
+        return render_template('home.html', messages=messages)
+    return render_template('home.html')
 
 @app.errorhandler(404)
 def error(e):
