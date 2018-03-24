@@ -14,20 +14,16 @@
             
             {% if current_user.is_authenticated %}
               <div class="row ml-auto mr-1">
-              
-                {% if current_user.id != message.user_id %}
-                  {% if current_user.is_liking(message) %}
-                    <form class="form-inline mx-1" method="POST" action="{{url_for('messages.like_add_del', id=current_user.id, message_id = message.id)}}?_method=DELETE">
-                      {{ form.csrf_token }}
-                      <input type="submit" value="Unlike" class="btn btn-success btn-sm">
-                    </form>
-                  {% else %}
-                    <form class="form-inline mx-1" method="POST" action="{{url_for('messages.like_add_del',id=current_user.id,message_id = message.id)}}">
-                      {{ form.csrf_token }}
-                      <input type="submit" value="Like" class="btn btn-outline-success btn-sm">
-                    </form>
-                  {% endif %}
-              {% endif %}
+                
+                {% if message.user_id != current_user.id %}
+                  <div class="like-area mt-1" id="{{current_user.id}}.{{message.id}}">
+                      {% if current_user.is_liking(message) %}
+                        <i class="fa fa-heart fa-2x" aria-hidden="true"></i>
+                      {% else %}
+                        <i class="fa fa-heart-o fa-2x" aria-hidden="true"></i>
+                      {% endif %}  
+                  </div>
+                {% endif %}
 
               {% if current_user.id == message.user.id %}
                 <form class="form-inline mx-1" method="POST" action="{{url_for('messages.show', message_id=message.id, id=message.user.id)}}?_method=DELETE">

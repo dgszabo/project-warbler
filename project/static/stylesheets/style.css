@@ -481,6 +481,6 @@ nav + .container {
   margin-bottom: 10px;
 }
 
-.like-area {
+.like-area, .unlike-area {
   z-index: 10;
 }

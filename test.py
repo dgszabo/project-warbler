@@ -53,39 +53,39 @@ class BaseTestCase(TestCase):
         response_1 = self.client.get('/users/4/show')
         self.assertIn(b'test_person_4', response.data)
     
-    def test_users_show(self):
-        response = self.client.get('/users/1')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'test_person_1', response.data)
+    # def test_users_show(self):
+    #     response = self.client.get('/users/1')
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertIn(b'test_person_1', response.data)
 
 
     def test_users_edit(self):
-        response = self.client.get('/users/1')
+        response = self.client.get('/users/1', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(b'Edit Profile', response.data)
         
-        # response_1 = self.client.post('/users/login', data=dict(username="test_person_1", password = "password_1"), follow_redirects=True)
-        # response_2 = self.client.get('/users/1', data=dict(username="test_person_1", password = "password_1"))
-        # self.assertEqual(response.status_code, 200)
-        # self.assertIn(b'Edit Profile', response.data)
+        response_1 = self.client.post('/users/login', data=dict(username="test_person_1", password = "password_1"), follow_redirects=True)
+        response_2 = self.client.get('/users/1', data=dict(username="test_person_1", password = "password_1"), follow_redirects=True)
+        self.assertEqual(response_2.status_code, 200)
+        self.assertIn(b'Edit Profile', response_2.data)
         
         # response_1 = self.client.get('/users/3/edit')
         # self.assertIn(b'test_person_3', response.data)
         # self.assertIn(b'test3@test.test', response.data)
         # self.assertNotIn(b'password3', response.data)
 
-    def test_users_update(self):
-        response = self.client.patch(
-            '/users/2?_method=PATCH',
-            data=dict(full_name = 'updated name', username = 'updated', password = 'password_2', location = 'Oakley, CA', bio = 'no test bio', email = 'test2@test.test', image_url = 'some_picture_2.jpg', header_image_url = 'some_header_2.png'),
-            follow_redirects=True
-        )
+    # def test_users_update(self):
+    #     response = self.client.patch(
+    #         '/users/2?_method=PATCH',
+    #         data=dict(full_name = 'updated name', username = 'updated', password = 'password_2', location = 'Oakley, CA', bio = 'no test bio', email = 'test2@test.test', image_url = 'some_picture_2.jpg', header_image_url = 'some_header_2.png'),
+    #         follow_redirects=True
+    #     )
 
-        response_1 = self.client.get('/users/2')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'updated name', response.data)
-        self.assertIn(b'updated', response.data)
-        self.assertNotIn(b'test_person_2', response.data)
+    #     response_1 = self.client.get('/users/2')
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertIn(b'updated name', response.data)
+    #     self.assertIn(b'updated', response.data)
+    #     self.assertNotIn(b'test_person_2', response.data)
 
     # def test_users_delete(self):
     #     response = self.client.delete(

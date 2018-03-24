@@ -32,7 +32,7 @@
           <li class="stat">
             <p class="small">Likes</p>
             <h4>
-              <a href="{{ url_for('users.likes', id=user.id) }}">{{ user.message_likes|length }}</a>
+              <a id="like-count" href="{{ url_for('users.likes', id=user.id) }}">{{ user.message_likes|length }}</a>
             </h4>
           </li>
           <div class="ml-auto">

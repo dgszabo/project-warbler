@@ -22,27 +22,7 @@ def index(id):
             return redirect(url_for('users.show', id=id))
     return render_template('messages/new.html', form=form)
 
-
 @messages_blueprint.route('/<int:message_id>/likes', methods=['POST', 'DELETE'])
-@login_required
-@ensure_correct_user
-def like_add_del(id, message_id):
-    user=User.query.get_or_404(id)
-    form = LikeForm(request.form)
-    if request.method == 'POST':
-        if form.validate():
-            user.message_likes.append(Message.query.get_or_404(message_id))
-            db.session.commit()
-            return redirect(url_for('users.likes', id = id))
-        return redirect(url_for('users.index'))
-    if request.method == b'DELETE':
-        if form.validate():
-            user.message_likes.remove(Message.query.get_or_404(message_id))
-            db.session.commit()
-            return redirect(url_for('users.likes', id = id))
-        return redirect(url_for('users.index'))
-
-@messages_blueprint.route('/ajax/<int:message_id>/likes', methods=['POST', 'DELETE'])
 @login_required
 @ensure_correct_user
 def ajax_like_add_del(id, message_id):
@@ -57,7 +37,9 @@ def ajax_like_add_del(id, message_id):
         if id == user.id:
             user.message_likes.remove(Message.query.get_or_404(message_id))
             db.session.commit()
-            return jsonify('you managed to un-like something')
+            like_count = len(user.message_likes)
+            temp = jsonify({'like_count': like_count})
+            return jsonify({'like_count': like_count})
         return jsonify('unlike was not registered')
 
 @messages_blueprint.route('/new')

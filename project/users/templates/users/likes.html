@@ -14,6 +14,9 @@
           <span class="text-muted">{{ message.timestamp.strftime('%d %B %Y') }}</span>
           <p>{{ message.text }}</p>
         </div>
+        <div class="unlike-area ml-auto" id="{{current_user.id}}.{{message.id}}">
+            <i class="fa fa-heart" aria-hidden="true"></i> 
+        </div>
       </li>
       {% endfor %}
   </ul>
