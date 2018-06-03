@@ -23,13 +23,17 @@ def ensure_correct_user(fn):
 
 @users_blueprint.route('/', methods=["GET"])
 def index():
+    if 'user_id' in session:
+        user_logged_in = True
+    else:
+        user_logged_in = False
     search = request.args.get('q')
     users = None
     if search is None or search == '':
         users = User.query.all()
     else:
         users = User.query.filter(User.username.like("%%%s%%" % search)).all()
-    return render_template('users/index.html', users=users)
+    return render_template('users/index.html', users=users, user_logged_in=user_logged_in)
 
 
 @users_blueprint.route('/signup', methods=["GET", "POST"])
@@ -89,8 +93,7 @@ def edit(id):
         'users/edit.html', form=UserEditForm(), user=User.query.get_or_404(id))
 
 
-@users_blueprint.route(
-    '/<int:follower_id>/follower', methods=['POST', 'DELETE'])
+@users_blueprint.route('/<int:follower_id>/follower', methods=['POST', 'DELETE'])
 @login_required
 def follower(follower_id):
     followed = User.query.get_or_404(follower_id)
